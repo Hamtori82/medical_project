@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 건강 설문 - 생생건강통</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e74c3c;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            font-weight: normal;
+            cursor: pointer;
+            gap: 6px;
+        }
+        
+        .radio-group input[type="radio"] {
+            cursor: pointer;
+            accent-color: #e74c3c;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            font-weight: normal;
+            cursor: pointer;
+            gap: 6px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: #e74c3c;
+        }
+        
+        .yes-no-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .yes-no-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .yes-no-btn:hover {
+            border-color: #e74c3c;
+        }
+        
+        .yes-no-btn.active {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .button-wrapper {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px 30px;
+            border-top: 2px solid #ecf0f1;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit {
+            background: #e74c3c;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .btn-submit:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn-simple {
+            background: #3498db;
+            color: white;
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+        
+        .btn-simple:hover {
+            background: #2980b9;
+        }
+        
+        .info-badge {
+            background: #fdeaea;
+            border-left: 3px solid #e74c3c;
+            padding: 12px;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #c0392b;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 상세 건강 설문</h1>
+            <p>더 정확한 건강 예측을 위해 자세한 정보를 입력해주세요</p>
+        </div>
+        
+        <form method="POST" action="/survey/detailed/result">
+            <div class="content">
+                <div class="info-badge">
+                    💡 모든 항목은 선택사항입니다. 알고 있는 정보만 입력해주세요.
+                </div>
+                
+                <!-- 기본 정보 섹션 -->
+                <div class="section">
+                    <div class="section-title">📋 기본 정보</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>성별</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="SEX" value="1"> 남성</label>
+                                <label><input type="radio" name="SEX" value="0"> 여성</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">연령 (세)</label>
+                            <input type="number" id="age" name="AGE" placeholder="예: 35" min="1" max="120">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ht">신장 (cm)</label>
+                            <input type="number" id="ht" name="HE_HT" placeholder="예: 175" min="100" max="250">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="wt">체중 (kg)</label>
+                            <input type="number" id="wt" name="HE_WT" placeholder="예: 70" min="20" max="300">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 혈압 & 검진 결과 -->
+                <div class="section">
+                    <div class="section-title">🩺 혈압 & 건강 검진</div>
+                    
+                    <div class="form-group">
+                        <label for="dbp">이완기 혈압 (mmHg)</label>
+                        <input type="number" id="dbp" name="HE_DBP" placeholder="예: 80" min="40" max="150">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>가족 중 질병 력 있음?</label>
+                        <div class="yes-no-group">
+                            <button type="button" class="yes-no-btn" onclick="setField('HE_FH', '1', this)">예</button>
+                            <button type="button" class="yes-no-btn" onclick="setField('HE_FH', '0', this)">아니오</button>
+                        </div>
+                        <input type="hidden" name="HE_FH" value="">
+                    </div>
+                </div>
+                
+                <!-- 생활 습관 - 음주 -->
+                <div class="section">
+                    <div class="section-title">🍷 음주 습관</div>
+                    
+                    <div class="form-group">
+                        <label>평일 음주 빈도</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="LQ_1EQL" value="1"> 월 1회 이하</label>
+                            <label><input type="radio" name="LQ_1EQL" value="2"> 월 2-4회</label>
+                            <label><input type="radio" name="LQ_1EQL" value="3"> 주 2회 이상</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>주말 음주 빈도</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="LQ_2EQL" value="1"> 월 1회 이하</label>
+                            <label><input type="radio" name="LQ_2EQL" value="2"> 월 2-4회</label>
+                            <label><input type="radio" name="LQ_2EQL" value="3"> 주 2회 이상</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>1회 음주 시 소주 잔 수</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="LQ_3EQL" value="1"> 1-2잔</label>
+                            <label><input type="radio" name="LQ_3EQL" value="2"> 3-6잔</label>
+                            <label><input type="radio" name="LQ_3EQL" value="3"> 7잔 이상</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 생활 습관 - 흡연 & 운동 & 스트레스 -->
+                <div class="section">
+                    <div class="section-title">🚭 흡연 & 운동 & 스트레스</div>
+                    
+                    <div class="form-group">
+                        <label>현재 흡연 여부</label>
+                        <div class="yes-no-group">
+                            <button type="button" class="yes-no-btn" onclick="setField('SM_PRESNT', '1', this)">흡연</button>
+                            <button type="button" class="yes-no-btn" onclick="setField('SM_PRESNT', '0', this)">비흡연</button>
+                        </div>
+                        <input type="hidden" name="SM_PRESNT" value="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>주간 운동 횟수</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="L_BR_FQ" value="1"> 안함</label>
+                            <label><input type="radio" name="L_BR_FQ" value="2"> 1-2회</label>
+                            <label><input type="radio" name="L_BR_FQ" value="3"> 3-5회</label>
+                            <label><input type="radio" name="L_BR_FQ" value="4"> 주6회 이상</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>스트레스 수준</label>
+                        <div class="yes-no-group">
+                            <button type="button" class="yes-no-btn" onclick="setField('MH_STRESS', '1', this)">높음</button>
+                            <button type="button" class="yes-no-btn" onclick="setField('MH_STRESS', '0', this)">낮음</button>
+                        </div>
+                        <input type="hidden" name="MH_STRESS" value="">
+                    </div>
+                </div>
+                
+                <!-- 수면 & 신체 활동 -->
+                <div class="section">
+                    <div class="section-title">😴 수면 & 신체 활동</div>
+                    
+                    <div class="form-group">
+                        <label for="sleep">평균 수면시간 (시간/일)</label>
+                        <input type="number" id="sleep" name="TOTAL_SLP_WD" placeholder="예: 7" min="0" max="24" step="0.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>좌식 생활 시간</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="BE3_81" value="1"> < 3시간</label>
+                            <label><input type="radio" name="BE3_81" value="2"> ≥ 3시간</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 영양 섭취 -->
+                <div class="section">
+                    <div class="section-title">🍽️ 영양 섭취 정보</div>
+                    
+                    <div class="form-group">
+                        <label for="intake">1일 식품섭취량 (g) - 모를 경우 0</label>
+                        <input type="number" id="intake" name="N_INTK" placeholder="0" min="0">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="energy">에너지 섭취 (kcal)</label>
+                            <input type="number" id="energy" name="N_EN" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="protein">단백질 섭취 (g)</label>
+                            <input type="number" id="protein" name="N_PROT" placeholder="0" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fat">지방 섭취 (g)</label>
+                            <input type="number" id="fat" name="N_FAT" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="carbs">탄수화물 섭취 (g)</label>
+                            <input type="number" id="carbs" name="N_SUGAR" placeholder="0" min="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-wrapper">
+                <button type="reset" class="btn btn-reset">초기화</button>
+                <button type="submit" class="btn btn-submit">분석하기</button>
+                <a href="/survey" class="btn btn-simple" style="text-align: center;">간단한 설문</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        function setField(fieldName, value, button) {
+            // Hidden input에 값 설정
+            document.querySelector(`input[name="${fieldName}"]`).value = value;
+            
+            // 버튼 활성화 상태 변경
+            const group = button.parentElement;
+            group.querySelectorAll('.yes-no-btn').forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+        }
+    </script>
+</body>
+</html>

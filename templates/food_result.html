@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음식 탐지 결과 - 생생건강통</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f39c12;
+        }
+        
+        .food-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .food-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .food-card:hover {
+            border-color: #f39c12;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.1);
+        }
+        
+        .food-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .food-confidence {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .confidence-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f39c12;
+            min-width: 50px;
+        }
+        
+        .confidence-bar {
+            flex: 1;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+            border-radius: 10px;
+        }
+        
+        .nutrition-info {
+            background: #f0f7ff;
+            border-left: 3px solid #3498db;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .nutrition-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .nutrition-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .nutrition-value {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        .nutrition-summary {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .nutrition-summary h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .nutrition-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .nutrition-summary-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ffc107;
+        }
+        
+        .nutrition-summary-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .nutrition-summary-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        
+        .advice-section {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .advice-section h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        
+        .advice-section p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ 음식 탐지 결과</h1>
+            <p>당신의 식사가 분석되었습니다</p>
+        </div>
+        
+        <div class="content">
+            <!-- 탐지된 음식 -->
+            <div class="info-section">
+                <h2 class="section-title">🥘 탐지된 음식</h2>
+                <div class="food-list">
+                    {% for food in detected_foods %}
+                    <div class="food-card">
+                        <div class="food-name">{{ food.name }}</div>
+                        <div class="food-confidence">
+                            <span class="confidence-value">{{ "%.1f"|format(food.confidence * 100) }}%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: {{ food.confidence * 100 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="nutrition-info">
+                            {% if food.nutrition %}
+                                {% for nutrient, value in food.nutrition.items() %}
+                                <div class="nutrition-item">
+                                    <span class="nutrition-label">{{ nutrient }}:</span>
+                                    <span class="nutrition-value">{{ value }}</span>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- 영양 요약 -->
+            <div class="nutrition-summary">
+                <h3>📊 식사 영양 요약</h3>
+                <div class="nutrition-summary-grid">
+                    <div class="nutrition-summary-item">
+                        <div class="nutrition-summary-label">총 칼로리</div>
+                        <div class="nutrition-summary-value">{{ nutrition_total.calories|default('0') }} kcal</div>
+                    </div>
+                    <div class="nutrition-summary-item">
+                        <div class="nutrition-summary-label">탄수화물</div>
+                        <div class="nutrition-summary-value">{{ nutrition_total.carbs|default('0') }}g</div>
+                    </div>
+                    <div class="nutrition-summary-item">
+                        <div class="nutrition-summary-label">단백질</div>
+                        <div class="nutrition-summary-value">{{ nutrition_total.protein|default('0') }}g</div>
+                    </div>
+                    <div class="nutrition-summary-item">
+                        <div class="nutrition-summary-label">지방</div>
+                        <div class="nutrition-summary-value">{{ nutrition_total.fat|default('0') }}g</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 조언 -->
+            <div class="advice-section">
+                <h3>💡 영양 조언</h3>
+                <p>
+                    이 음식 탐지는 AI 분석에 따른 예측입니다.
+                    정확한 영양 정보는 음식 패키지 라벨을 참고해주세요.
+                    균형잡힌 식단으로 건강한 생활을 유지하세요!
+                </p>
+            </div>
+            
+            <!-- 버튼 -->
+            <div class="button-group">
+                <a href="/predict" class="btn btn-secondary">다시 업로드하기</a>
+                <a href="/home" class="btn btn-primary">홈으로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

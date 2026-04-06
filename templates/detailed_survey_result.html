@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 질병 예측 결과 - 생생건강통</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .disease-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .disease-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .disease-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        
+        .risk-meter {
+            margin-bottom: 12px;
+        }
+        
+        .risk-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .risk-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            transition: width 0.3s ease;
+        }
+        
+        .risk-high {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+        
+        .risk-medium {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+        
+        .risk-low {
+            background: linear-gradient(90deg, #27ae60, #229954);
+        }
+        
+        .risk-percentage {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-align: right;
+        }
+        
+        .risk-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .risk-label-high {
+            background: #fadbd8;
+            color: #c0392b;
+        }
+        
+        .risk-label-medium {
+            background: #fdebd0;
+            color: #e67e22;
+        }
+        
+        .risk-label-low {
+            background: #d5f4e6;
+            color: #229954;
+        }
+        
+        .description {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+        
+        .advice-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .advice-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .advice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .advice-card {
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        
+        .advice-card h4 {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .advice-good {
+            background: #d5f4e6;
+            border-left: 4px solid #27ae60;
+            color: #229954;
+        }
+        
+        .advice-bad {
+            background: #fadbd8;
+            border-left: 4px solid #e74c3c;
+            color: #c0392b;
+        }
+        
+        .advice-card ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .advice-card li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        .advice-card li:before {
+            content: "✓ ";
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        
+        .advice-bad li:before {
+            content: "✕ ";
+        }
+        
+        .input-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .summary-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .summary-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .btn-secondary:hover {
+            background: #bdc3c7;
+        }
+        
+        .btn-simple {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-simple:hover {
+            background: #2980b9;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .highlight-box h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-box p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+        
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .advice-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 상세 건강 진단 결과</h1>
+            <p>입력하신 심층 건강정보 기반 질병 위험도 분석</p>
+        </div>
+        
+        <!-- 입력 데이터 요약 -->
+        {% if age or sex %}
+        <div class="input-summary">
+            <div class="summary-title">📋 입력 정보 요약</div>
+            <div class="summary-grid">
+                {% if sex %}
+                <div class="summary-item">
+                    <div class="summary-label">성별</div>
+                    <div class="summary-value">{{ '남성' if sex == '1' else '여성' }}</div>
+                </div>
+                {% endif %}
+                {% if age %}
+                <div class="summary-item">
+                    <div class="summary-label">연령</div>
+                    <div class="summary-value">{{ age }}세</div>
+                </div>
+                {% endif %}
+                {% if height or weight %}
+                <div class="summary-item">
+                    <div class="summary-label">BMI</div>
+                    <div class="summary-value">
+                        {% if weight and height %}
+                            {% set bmi = (weight / (height/100)**2) | round(1) %}
+                            {{ bmi }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if sleep %}
+                <div class="summary-item">
+                    <div class="summary-label">수면시간</div>
+                    <div class="summary-value">{{ sleep }}시간</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- 위험도 하이라이트 -->
+        <div class="highlight-box">
+            <h3>🎯 최고 위험 질병</h3>
+            <p id="top-disease">분석 중...</p>
+        </div>
+        
+        <!-- 질병별 상세 결과 -->
+        <div class="results-grid">
+            {% for disease, probability in predictions.items() %}
+            <div class="disease-card">
+                <div class="disease-name">{{ disease }}</div>
+                <div class="risk-meter">
+                    <div class="risk-bar">
+                        <div class="risk-fill {% if probability >= 70 %}risk-high{% elif probability >= 40 %}risk-medium{% else %}risk-low{% endif %}" 
+                             style="width: {{ probability }}%">
+                            {{ probability | round(1) }}%
+                        </div>
+                    </div>
+                    <div class="risk-percentage">위험도: {{ probability | round(1) }}%</div>
+                </div>
+                
+                {% if probability >= 70 %}
+                    <div class="risk-label risk-label-high">🔴 높음 - 즉시 관심 필요</div>
+                    <div class="description">
+                        위험도가 높습니다. 의료 전문가의 상담을 권장합니다.
+                        조기 검진과 생활 습관 개선이 중요합니다.
+                    </div>
+                {% elif probability >= 40 %}
+                    <div class="risk-label risk-label-medium">🟠 중간 - 주의 필요</div>
+                    <div class="description">
+                        중간 정도의 위험도입니다. 정기적인 건강 검진과
+                        생활 습관 개선을 통해 관리하세요.
+                    </div>
+                {% else %}
+                    <div class="risk-label risk-label-low">🟢 낮음 - 양호</div>
+                    <div class="description">
+                        현재 위험도가 낮습니다. 건강한 생활 습관을
+                        유지하는 것이 중요합니다.
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- 맞춤 건강 조언 -->
+        <div class="advice-section">
+            <div class="advice-title">💡 개인화된 건강 조언</div>
+            <div class="advice-grid">
+                <div class="advice-card advice-good">
+                    <h4>✅ 추천하는 식습관</h4>
+                    <ul>
+                        <li>신선한 채소와 과일 섭취 증가</li>
+                        <li>통곡물 제품 선택</li>
+                        <li>생선 (오메가-3) 주 2-3회</li>
+                        <li>저지방 유제품</li>
+                        <li>충분한 수분 섭취 (2L/일)</li>
+                    </ul>
+                </div>
+                
+                <div class="advice-card advice-bad">
+                    <h4>❌ 피해야 할 식습관</h4>
+                    <ul>
+                        <li>과도한 염분 섭취</li>
+                        <li>가공식품과 인스턴트</li>
+                        <li>과도한 음주</li>
+                        <li>고지방 육류</li>
+                        <li>설탕이 많은 음료</li>
+                    </ul>
+                </div>
+                
+                <div class="advice-card advice-good">
+                    <h4>✅ 권장하는 생활 습관</h4>
+                    <ul>
+                        <li>주 5일 이상 운동 (30분+)</li>
+                        <li>충분한 수면 (7-8시간)</li>
+                        <li>스트레스 관리</li>
+                        <li>정기적인 건강 검진</li>
+                        <li>흡연 금지</li>
+                    </ul>
+                </div>
+                
+                <div class="advice-card advice-bad">
+                    <h4>❌ 피해야 할 생활 습관</h4>
+                    <ul>
+                        <li>야식과 늦은 취침</li>
+                        <li>과식 및 폭식</li>
+                        <li>장시간 앉아있기</li>
+                        <li>흡연 및 간접흡연</li>
+                        <li>과도한 스트레스</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 다음 액션 -->
+        <div class="button-group">
+            <a href="/mypage" class="btn btn-primary">내 정보 보기</a>
+            <a href="/survey" class="btn btn-secondary">간단한 설문 다시 하기</a>
+            <a href="/survey/detailed" class="btn btn-simple">상세 설문 다시 하기</a>
+        </div>
+    </div>
+    
+    <script>
+        // 최고 위험 질병 표시
+        const predictions = {{ predictions | tojson | safe }};
+        const topDisease = Object.entries(predictions).reduce((max, [disease, prob]) => 
+            prob > max[1] ? [disease, prob] : max, ['', 0]);
+        
+        if (topDisease[0]) {
+            const riskLevel = topDisease[1] >= 70 ? '높음' : (topDisease[1] >= 40 ? '중간' : '낮음');
+            document.getElementById('top-disease').textContent = 
+                `${topDisease[0]} (${topDisease[1].toFixed(1)}% - 위험도 ${riskLevel})`;
+        }
+    </script>
+</body>
+</html>

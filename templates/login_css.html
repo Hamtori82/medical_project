@@ -1,0 +1,58 @@
+
+<html>
+    <head>
+        <title>로그인 / 회원가입 </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login_style.css') }}">
+  
+    </head>
+    <body>
+        <from action = '/login' met
+        <div class="wrap">
+            <div class="form-wrap">
+                <div class="button-wrap">
+                    <div id="btn"></div>
+                    <button type="button" class="togglebtn" onclick="login()">로그인</button>
+                    <button type="button" class="togglebtn" onclick="register()">등록하기</button>
+                </div>
+                
+                <form id="login" action="/login" class="input-group" method = "POST">
+                    <input type="username" name = "username" class="input-field" placeholder="전화번호" required>
+                    <input type="password" name = "password" class="input-field" placeholder="비밀번호 4자리를 입력하세요" required>
+                    <input type="checkbox" class="checkbox"><span>비밀번호 기억하기</span>
+                    <button class="submit">
+                        들어가기
+                    </button>
+                </form>
+                <form id="register" action="/register" class="input-group" method = "POST">
+                    <input type="register_text" name = "register_text" class="input-field" placeholder="이름을 입력해주세요" required>
+                    <input type="register_number" name = "register_number" class="input-field" placeholder="전화번호를 입력해주세요" required>
+                    <input type="register_password" name = "register_password" class="input-field" placeholder="비밀번호 4자리 입력해주세요" required>
+                    <input type="checkbox" name = "register_checkbox" class="checkbox"><span>이용약관</span>
+                    <button class="submit">
+                        등록하기
+                    </button>
+                </form>
+            </div>
+        </div>
+        <script>
+            var x = document.getElementById("login");
+            var y = document.getElementById("register");
+            var z = document.getElementById("btn");
+            
+            
+            function login(){
+                x.style.left = "50px";
+                y.style.left = "450px";
+                z.style.left = "0";
+            }
+  
+            function register(){
+                x.style.left = "-400px";
+                y.style.left = "50px";
+                z.style.left = "110px";
+            }
+        </script>
+    </body>
+  </html>
+  
+  

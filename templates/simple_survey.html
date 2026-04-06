@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단한 설문 - 생생건강통</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #7f8c8d;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 간단한 건강 설문</h1>
+            <p>기본 정보를 입력해주세요</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                💡 <strong>안내:</strong> 모든 항목은 선택사항입니다. 원하시는 항목만 입력해주세요.
+            </div>
+            
+            <form method="POST" action="/survey/result">
+                <!-- 성별 -->
+                <div class="form-group">
+                    <label>성별</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="SEX" value="1"> 남성</label>
+                        <label><input type="radio" name="SEX" value="0"> 여성</label>
+                    </div>
+                </div>
+                
+                <!-- 연령 -->
+                <div class="form-group">
+                    <label for="age">연령 (세)</label>
+                    <input type="number" id="age" name="AGE" placeholder="예: 35" min="1" max="120">
+                </div>
+                
+                <!-- 신장 -->
+                <div class="form-group">
+                    <label for="ht">신장 (cm)</label>
+                    <input type="number" id="ht" name="HE_HT" placeholder="예: 175" min="100" max="250">
+                </div>
+                
+                <!-- 체중 -->
+                <div class="form-group">
+                    <label for="wt">체중 (kg)</label>
+                    <input type="number" id="wt" name="HE_WT" placeholder="예: 70" min="20" max="300">
+                </div>
+                
+                <!-- 이완기 혈압 -->
+                <div class="form-group">
+                    <label for="dbp">이완기 혈압 (mmHg)</label>
+                    <input type="number" id="dbp" name="HE_DBP" placeholder="예: 80" min="40" max="150">
+                </div>
+                
+                <!-- 수면시간 -->
+                <div class="form-group">
+                    <label for="sleep">평균 수면시간 (시간)</label>
+                    <input type="number" id="sleep" name="TOTAL_SLP_WD" placeholder="예: 7" min="0" max="24" step="0.5">
+                </div>
+                
+                <!-- 음주 -->
+                <div class="form-group">
+                    <label>음주 빈도</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="LQ_3EQL" value="1"> 월 1회 이하</label>
+                        <label><input type="radio" name="LQ_3EQL" value="2"> 월 2-4회</label>
+                        <label><input type="radio" name="LQ_3EQL" value="3"> 주 2회 이상</label>
+                    </div>
+                </div>
+                
+                <!-- 흡연 -->
+                <div class="form-group">
+                    <label>현재 흡연 여부</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="SM_PRESNT" value="0"> 비흡연</label>
+                        <label><input type="radio" name="SM_PRESNT" value="1"> 흡연</label>
+                    </div>
+                </div>
+                
+                <!-- 운동 -->
+                <div class="form-group">
+                    <label>주간 운동 횟수</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="L_BR_FQ" value="1"> 안함</label>
+                        <label><input type="radio" name="L_BR_FQ" value="2"> 1-2회</label>
+                        <label><input type="radio" name="L_BR_FQ" value="3"> 3-5회</label>
+                        <label><input type="radio" name="L_BR_FQ" value="4"> 주6회 이상</label>
+                    </div>
+                </div>
+                
+                <!-- 스트레스 -->
+                <div class="form-group">
+                    <label>스트레스 수준</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="BH1" value="1"> 낮음</label>
+                        <label><input type="radio" name="BH1" value="2"> 높음</label>
+                    </div>
+                </div>
+                
+                <!-- 버튼 -->
+                <div class="button-group">
+                    <button type="reset" class="btn btn-reset">초기화</button>
+                    <button type="submit" class="btn btn-submit">제출하기</button>
+                    <a href="/survey/detailed" class="btn btn-submit" style="background: #3498db; text-decoration: none; text-align: center;">상세 설문</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

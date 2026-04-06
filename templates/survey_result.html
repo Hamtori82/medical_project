@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>질병 예측 결과 - 생생건강통</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .disease-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .disease-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .disease-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .disease-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .disease-probability {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .probability-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 50px;
+        }
+        
+        .probability-bar {
+            flex: 1;
+            height: 25px;
+            background: #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .probability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .high-risk {
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .medium-risk {
+            background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .low-risk {
+            background: linear-gradient(90deg, #27ae60 0%, #229954 100%);
+        }
+        
+        .advice-section {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .advice-section h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        
+        .advice-section p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 질병 예측 결과</h1>
+            <p>당신의 건강 상태를 분석했습니다</p>
+        </div>
+        
+        <div class="content">
+            <!-- 예측 결과 -->
+            <div class="info-section">
+                <h2 class="section-title">📊 질병 발생 확률</h2>
+                <div class="disease-list">
+                    {% for disease_name, probability in predictions.items() %}
+                    <div class="disease-card">
+                        <div class="disease-name">{{ disease_name }}</div>
+                        <div class="disease-probability">
+                            <span class="probability-value">{{ "%.1f"|format(probability) }}%</span>
+                            <div class="probability-bar">
+                                <div class="probability-fill 
+                                    {% if probability >= 60 %}high-risk{% elif probability >= 40 %}medium-risk{% else %}low-risk{% endif %}"
+                                     style="width: {{ probability }}%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- 조언 -->
+            <div class="advice-section">
+                <h3>💡 건강 조언</h3>
+                <p>
+                    위 결과는 AI 분석에 따른 예측일 뿐, 의료 진단이 아닙니다.
+                    확률이 높은 질병은 정기적인 건강검진을 권장하며,
+                    건강한 생활습관 유지를 기울여주세요.
+                </p>
+            </div>
+            
+            <!-- 버튼 -->
+            <div class="button-group">
+                <a href="/survey" class="btn btn-secondary">다시 설문하기</a>
+                <a href="/home" class="btn btn-primary">홈으로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

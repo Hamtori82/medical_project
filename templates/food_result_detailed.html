@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 음식 분석 결과 - 생생건강통</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .image-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+        }
+        
+        .image-section img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+        
+        .nutrition-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f39c12;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f39c12;
+        }
+        
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .nutrition-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .nutrition-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .nutrition-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .detected-foods {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .foods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .food-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid #ecf0f1;
+        }
+        
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
+        }
+        
+        .food-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .confidence-badge {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .health-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 10px;
+        }
+        
+        .health-good {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+        
+        .health-bad {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+        
+        .health-neutral {
+            background: #fdebd0;
+            color: #e67e22;
+        }
+        
+        .health-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .recommendation-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .rec-card {
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .rec-good {
+            background: #d5f4e6;
+            border-left-color: #27ae60;
+        }
+        
+        .rec-bad {
+            background: #fadbd8;
+            border-left-color: #e74c3c;
+        }
+        
+        .rec-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .rec-good .rec-title {
+            color: #27ae60;
+        }
+        
+        .rec-bad .rec-title {
+            color: #e74c3c;
+        }
+        
+        .rec-list {
+            list-style: none;
+        }
+        
+        .rec-list li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .rec-list li:before {
+            margin-right: 8px;
+            font-weight: 700;
+        }
+        
+        .rec-good li:before {
+            content: "✓ ";
+            color: #27ae60;
+        }
+        
+        .rec-bad li:before {
+            content: "✕ ";
+            color: #e74c3c;
+        }
+        
+        .calorie-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .macros-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .macro-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+        
+        .macro-item:nth-child(2) {
+            border-left-color: #e74c3c;
+        }
+        
+        .macro-item:nth-child(3) {
+            border-left-color: #f39c12;
+        }
+        
+        .macro-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .macro-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        
+        .macro-percent {
+            font-size: 11px;
+            color: #95a5a6;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .btn-secondary:hover {
+            background: #bdc3c7;
+        }
+        
+        .highlight-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rec-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .macros-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ 상세 음식 분석 결과</h1>
+            <p>YOLO 기반 음식 탐지 및 영양 평가</p>
+        </div>
+        
+        <!-- 이미지 & 영양정보 -->
+        <div class="content-grid">
+            <div class="image-section">
+                {% if image %}
+                    <img src="{{ url_for('static', filename=image) }}" alt="음식 이미지">
+                {% else %}
+                    <div style="text-align: center; color: #bdc3c7;">
+                        <p style="font-size: 48px;">📸</p>
+                        <p>이미지 없음</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="nutrition-section">
+                <div class="section-title">📊 영양 정보</div>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">총 칼로리</div>
+                        <div class="nutrition-value">{{ calories | round(0) | int }}kcal</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">탄수화물</div>
+                        <div class="nutrition-value">{{ carbs | round(1) }}g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">단백질</div>
+                        <div class="nutrition-value">{{ protein | round(1) }}g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">지방</div>
+                        <div class="nutrition-value">{{ fat | round(1) }}g</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid #ecf0f1;">
+                    <div class="nutrition-label" style="margin-bottom: 10px;">평가</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="health-badge health-neutral">⚖️</div>
+                        <span style="font-size: 14px; font-weight: 600; color: #e67e22;">보통 - 적절한 섭취 권장</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 탐지된 음식 -->
+        <div class="detected-foods">
+            <div class="section-title">
+                🎯 탐지된 음식
+                <span class="highlight-badge">{{ foods|length }}개</span>
+            </div>
+            <div class="foods-grid">
+                {% for food in foods %}
+                <div class="food-card">
+                    <div class="food-name">{{ food['name'] }}</div>
+                    <div class="confidence-badge">신뢰도: {{ (food['confidence'] * 100) | round(1) }}%</div>
+                    
+                    {% if food['healthiness'] == 'good' %}
+                        <div class="health-badge health-good">✓</div>
+                        <div class="health-label">권장 음식</div>
+                    {% elif food['healthiness'] == 'bad' %}
+                        <div class="health-badge health-bad">✕</div>
+                        <div class="health-label">피해야 할 음식</div>
+                    {% else %}
+                        <div class="health-badge health-neutral">○</div>
+                        <div class="health-label">보통</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 영양 분석 -->
+        <div class="calorie-chart">
+            <div class="section-title">📈 영양소 구성</div>
+            <div class="macros-bar">
+                <div class="macro-item">
+                    <div class="macro-label">탄수화물</div>
+                    <div class="macro-value">{{ carbs | round(0) | int }}g</div>
+                    <div class="macro-percent">{% set total = carbs + protein + fat %}{{ ((carbs / total * 100) if total > 0 else 0) | round(1) }}%</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">단백질</div>
+                    <div class="macro-value">{{ protein | round(0) | int }}g</div>
+                    <div class="macro-percent">{% set total = carbs + protein + fat %}{{ ((protein / total * 100) if total > 0 else 0) | round(1) }}%</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">지방</div>
+                    <div class="macro-value">{{ fat | round(0) | int }}g</div>
+                    <div class="macro-percent">{% set total = carbs + protein + fat %}{{ ((fat / total * 100) if total > 0 else 0) | round(1) }}%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 식생활 권장사항 -->
+        <div class="recommendation-section">
+            <div class="section-title">💡 맞춤 식생활 가이드</div>
+            <div class="rec-grid">
+                <div class="rec-card rec-good">
+                    <div class="rec-title">✓ 권장하는 식습관</div>
+                    <ul class="rec-list">
+                        <li>신선한 채소와 과일 섭취 증가</li>
+                        <li>저지방 단백질 선택 (생선, 두부)</li>
+                        <li>통곡물 제품 선택</li>
+                        <li>가공식품 최소화</li>
+                        <li>염분 섭취 제한</li>
+                    </ul>
+                </div>
+                
+                <div class="rec-card rec-bad">
+                    <div class="rec-title">✕ 피해야 할 식습관</div>
+                    <ul class="rec-list">
+                        <li>과도한 기름진 음식</li>
+                        <li>고염분 음식</li>
+                        <li>정크푸드와 인스턴트</li>
+                        <li>과도한 알코올</li>
+                        <li>과식 및 빠른 섭취</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 네비게이션 -->
+        <div class="button-group">
+            <a href="/predict" class="btn btn-primary">다시 분석하기</a>
+            <a href="/mypage" class="btn btn-secondary">내 정보 보기</a>
+            <a href="/home" class="btn btn-secondary">홈으로</a>
+        </div>
+    </div>
+</body>
+</html>
